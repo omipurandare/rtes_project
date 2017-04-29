@@ -20,33 +20,35 @@ int main(void) {
   gpio_set_dir(GPIOPIN40, OUTPUT_PIN);
   gpio_set_dir(GPIOPIN43, INPUT_PIN);
   printf("in main\n");
+  //gpio_set_value(GPIOPIN40, HIGH);
   while (1) {
     unsigned int value;
-    while(1)
-    {
+    //while(1)
+  //  {
         value = HIGH;
         gpio_set_value(GPIOPIN40, LOW);
 	//usleep(10);
-        delay_time(10000); //2us delay = 2000ns
+        delay_time(2000); //2us delay = 2000ns
         gpio_set_value(GPIOPIN40, HIGH);
 	//usleep(10);
        	delay_time(10000); //10us delay = 10000ns
-        gpio_set_value(GPIOPIN40, LOW);
-    }
+       gpio_set_value(GPIOPIN40, LOW);
+   // }
 //    printf("main while loop\n");
 
     clock_gettime(CLOCK_MONOTONIC, &pulse_start);
     while (value != LOW) {
-      printf("in loop\n");
+     // printf("in loop\n");
       gpio_get_value(GPIOPIN43, &value);
     }
     clock_gettime(CLOCK_MONOTONIC, &pulse_end);
 
     pulse_duration = pulse_end.tv_nsec - pulse_start.tv_nsec;
 
-    pulse_width = pulse_duration * 1000; //in microseconds
-    distance = pulse_width / 58 ; //distance in centimeters
-    printf("%ld cm\n",distance);
+    pulse_width = pulse_duration / 1000; //in microseconds
+    //distance = pulse_width / 58 ; //distance in centimeters
+    printf("%ld cm\n",pulse_width);
+    usleep(500000);
   }
   return 0;
 }
