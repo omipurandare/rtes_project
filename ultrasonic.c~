@@ -61,7 +61,7 @@ void delay_time(int nsec)
 	clock_gettime(CLOCK_MONOTONIC, &time_comp);
 	if(time_comp.tv_nsec >= time_end.tv_nsec)
         	break;
-	//printf("0\n");
+	printf("0\n");
 //	else
 //		printf("current time%ld\n", time_comp.tv_nsec);
   }
