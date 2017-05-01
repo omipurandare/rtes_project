@@ -5,11 +5,14 @@
 #include <errno.h>
 #include "SimpleGPIO.h"
 #include <time.h>
+#include <syslog.h>
+#include <stdint.h>
 
 unsigned int GPIOPIN40 = 160;     //TRIG pin OUTPUT
 unsigned int GPIOPIN43 = 161;     //ECHO pin INPUT
-
+uint32_t count;
 void delay_time(int nsec);
+
 
 int main(void) {
   long duration, distance;
@@ -19,6 +22,7 @@ int main(void) {
   gpio_export(GPIOPIN43);
   gpio_set_dir(GPIOPIN40, OUTPUT_PIN);
   gpio_set_dir(GPIOPIN43, INPUT_PIN);
+
   printf("in main\n");
   //gpio_set_value(GPIOPIN40, HIGH);
   while (1) {
@@ -26,30 +30,40 @@ int main(void) {
     //while(1)
   //  {
         value = HIGH;
-        gpio_set_value(GPIOPIN40, LOW);
+        //gpio_set_value(GPIOPIN40, LOW);
 	//usleep(10);
-        delay_time(2000); //2us delay = 2000ns
-        gpio_set_value(GPIOPIN40, HIGH);
+       // delay_time(2000); //2us delay = 2000ns
+       // gpio_set_value(GPIOPIN40, HIGH);
 	//usleep(10);
-       	delay_time(10000); //10us delay = 10000ns
-       gpio_set_value(GPIOPIN40, LOW);
+       //delay_time(10000); //10us delay = 10000ns
+      // gpio_set_value(GPIOPIN40, LOW);
    // }
 //    printf("main while loop\n");
 
-    clock_gettime(CLOCK_MONOTONIC, &pulse_start);
-    while (value != LOW) {
-     // printf("in loop\n");
-      gpio_get_value(GPIOPIN43, &value);
-    }
-    clock_gettime(CLOCK_MONOTONIC, &pulse_end);
+    //clock_gettime(CLOCK_MONOTONIC, &pulse_start);
+	count = 0;
 
-    pulse_duration = pulse_end.tv_nsec - pulse_start.tv_nsec;
+	while (value != LOW)
+	{
+		gpio_get_value(GPIOPIN43, &value);
+		count++;
+	}
 
-    pulse_width = pulse_duration / 1000; //in microseconds
+	printf("%d\n",count);
+    //clock_gettime(CLOCK_MONOTONIC, &pulse_end);
+
+	//pulse_duration = pulse_end.tv_nsec - pulse_start.tv_nsec;
+
+	//pulse_width = pulse_duration / 1000; //in microseconds
     //distance = pulse_width / 58 ; //distance in centimeters
-    printf("%ld cm\n",pulse_width);
-    usleep(500000);
+
+//    printf("%d us\n",value);
+//  openlog( NULL, LOG_CONS, LOG_USER );
+//  syslog( LOG_MAKEPRI( LOG_USER, LOG_INFO ),"Echo pin value %d\n", value);
+//  closelog();	
+//	usleep(50000);
   }
+   closelog();	
   return 0;
 }
 

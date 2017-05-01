@@ -2,6 +2,7 @@
 #include <string>
 #include <unistd.h>
 #include "gpio.h"
+#include "SimpleGPIO.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
 	cout << "Testing the GPIO Pins" << endl;
 	gpio_export(GPIOPIN50); 				// The LED
 	gpio_export(GPIOPIN58); 				// The push button switch
+	gpio_export(GPIOPIN55);
+	gpio_export(GPIOPIN52);
 	gpio_set_dir(GPIOPIN50, OUTPUT_PIN); 			// The LED is an output
 	gpio_set_dir(GPIOPIN58, OUTPUT_PIN); 			// The LED is an output
 	gpio_set_dir(GPIOPIN55, OUTPUT_PIN);

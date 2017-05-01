@@ -9,7 +9,7 @@ CPPLIBS= -L/usr/lib -lopencv_core -lopencv_flann -lopencv_video
 
 HFILES= 
 CFILES= 
-CPPFILES= capture.cpp
+CPPFILES= capture_2.cpp
 
 SRCS= ${HFILES} ${CFILES}
 CPPOBJS= ${CPPFILES:.cpp=.o}

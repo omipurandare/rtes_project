@@ -16,6 +16,9 @@ CPPOBJS= ${CPPFILES:.cpp=.o}
 
 all:	capture 
 
+run:
+	sudo ./capture
+
 clean:
 	-rm -f *.o *.d
 	-rm -f capture
