@@ -211,7 +211,7 @@ void *CVThread(void *)
         GaussianBlur(gray, gray, Size(9,9), 2, 2);
 		
 	pthread_mutex_lock(&vector_mutex);
-        HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 1, gray.rows/8, 100, 50, 30, 40);
+        HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 1, gray.rows/8, 100, 50, 5, 40);
 	pthread_mutex_unlock(&vector_mutex);	
 
         for( size_t i = 0; i < circles.size(); i++ )
@@ -273,7 +273,7 @@ void *MotorThread(void *)
 		//for(size_t i = 0; i < circles.size(); i++)
 		if(circles.size() > 0)		
 		{	
-			if (circles[0][0] >= 360)
+			if (circles[0][0] >= 480)
 			{	
 				//Left turn 
 				gpio_set_value(GPIOPIN50, HIGH);
@@ -282,7 +282,7 @@ void *MotorThread(void *)
 				gpio_set_value(GPIOPIN52, LOW);
 
 			}
-			else if (circles[0][0] <= 280)
+			else if (circles[0][0] <= 160)
 			{	
 				//Right turn 
 				gpio_set_value(GPIOPIN50, LOW);
@@ -292,7 +292,7 @@ void *MotorThread(void *)
 			}
 			else
 			{
-				if(c>110)
+				if(c>80)
 				{
 					gpio_set_value(GPIOPIN50, HIGH);
 					gpio_set_value(GPIOPIN58, LOW);
@@ -336,7 +336,7 @@ void *MotorThread(void *)
 		}*/
 		pthread_mutex_unlock(&vector_mutex);
 		pthread_mutex_unlock(&ultrasonic_mutex);
-		usleep(20000);
+		usleep(40000);
 	}
         
 }
