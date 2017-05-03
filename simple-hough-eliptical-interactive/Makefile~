@@ -9,7 +9,7 @@ CPPLIBS= -L/usr/lib -lopencv_core -lopencv_flann -lopencv_video
 
 HFILES= 
 CFILES= 
-CPPFILES= capture.cpp
+CPPFILES= capture_2.cpp
 
 SRCS= ${HFILES} ${CFILES}
 CPPOBJS= ${CPPFILES:.cpp=.o}
@@ -27,7 +27,7 @@ distclean:
 	-rm -f *.o *.d
 
 capture: capture.o
-	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o `pkg-config --libs opencv` $(CPPLIBS)
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o `pkg-config --libs opencv` $(CPPLIBS) $(LIBS)
 
 depend:
 
