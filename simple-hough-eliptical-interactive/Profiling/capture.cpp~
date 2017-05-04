@@ -89,7 +89,40 @@ int delta_t(struct timespec *stop, struct timespec *start, struct timespec *delt
 void calc_avg(long *arr);
 /*********************************************************************************/
 
+int delta_t(struct timespec *stop, struct timespec *start, struct timespec *delta_t)
+{
+  int dt_sec=stop->tv_sec - start->tv_sec;
+  int dt_nsec=stop->tv_nsec - start->tv_nsec;
 
+  if(dt_sec >= 0)
+  {
+    if(dt_nsec >= 0)
+    {
+      delta_t->tv_sec=dt_sec;
+      delta_t->tv_nsec=dt_nsec;
+    }
+    else
+    {
+      delta_t->tv_sec=dt_sec-1;
+      delta_t->tv_nsec=NSEC_PER_SEC+dt_nsec;
+    }
+  }
+  else
+  {
+    if(dt_nsec >= 0)
+    {
+      delta_t->tv_sec=dt_sec;
+      delta_t->tv_nsec=dt_nsec;
+    }
+    else
+    {
+      delta_t->tv_sec=dt_sec-1;
+      delta_t->tv_nsec=NSEC_PER_SEC+dt_nsec;
+    }
+  }
+
+  return(1);
+}
 
 int main( int argc, char** argv )
 {
@@ -165,7 +198,7 @@ int main( int argc, char** argv )
 	pthread_attr_setschedparam(&ultrasonic_attr, &ultrasonic_param);
 	pthread_attr_setschedparam(&main_attr, &main_param);
 
-
+	clock_gettime(CLOCK_REALTIME, &start);
 	if(pthread_create(&CV_thread, &CV_attr, CVThread, (void *)0))
 	{
 		printf("Error creating CV thread\n");
@@ -249,6 +282,9 @@ void *CVThread(void *)
         char c = cvWaitKey(10);
         if( c == 'q' )	
 		break;
+	clock_gettime(CLOCK_REALTIME, &end);
+	delta_t(&end, &start, &thread_dt);
+	printf("Thread IMAGE completed at time stamp: %lf msec\n",(double)(thread_dt.tv_nsec / 1000000));
 	//usleep(30000);
 	//sem_post(&sem_ultra);
    }
@@ -287,8 +323,8 @@ void *MotorThread(void *)
 				//Right turn 
 				gpio_set_value(GPIOPIN50, LOW);
 				gpio_set_value(GPIOPIN58, LOW);
-				gpio_set_value(GPIOPIN55, HIGH);
-				gpio_set_value(GPIOPIN52, LOW);
+				gpio_set_value(GPIOPIN55, LOW);
+				gpio_set_value(GPIOPIN52, HIGH);
 			}
 			else
 			{
@@ -296,8 +332,8 @@ void *MotorThread(void *)
 				{
 					gpio_set_value(GPIOPIN50, HIGH);
 					gpio_set_value(GPIOPIN58, LOW);
-					gpio_set_value(GPIOPIN55, HIGH);
-					gpio_set_value(GPIOPIN52, LOW);
+					gpio_set_value(GPIOPIN55, LOW);
+					gpio_set_value(GPIOPIN52, HIGH);
 				}
 				else
 				{
@@ -336,7 +372,10 @@ void *MotorThread(void *)
 		}*/
 		pthread_mutex_unlock(&vector_mutex);
 		pthread_mutex_unlock(&ultrasonic_mutex);
-		usleep(40000);
+		clock_gettime(CLOCK_REALTIME, &end);
+		delta_t(&end, &start, &thread_dt);
+		printf("Thread MOTOR completed at time stamp: %lf msec\n",(double)(thread_dt.tv_nsec / 1000000));
+		usleep(20000);
 	}
         
 }
@@ -350,11 +389,14 @@ void *UltrasonicThread(void *)
 		//printf("Thread ultra\n");
 		pthread_mutex_lock(&ultrasonic_mutex);
 		while(read(fd, &c, 1) <= 0){}
-		printf("%d\n", c);
+		//printf("%d\n", c);
 		fflush(stdout);
 		pthread_mutex_unlock(&ultrasonic_mutex);
 		//sem_post(&sem_image);
-		usleep(25000);
+		clock_gettime(CLOCK_REALTIME, &end);
+		delta_t(&end, &start, &thread_dt);
+		printf("Thread ULTRASONIC completed at time stamp: %lf msec\n",(double)(thread_dt.tv_nsec / 1000000));
+		usleep(50000);
 	}
 }
 

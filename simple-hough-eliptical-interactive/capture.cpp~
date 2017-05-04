@@ -287,8 +287,8 @@ void *MotorThread(void *)
 				//Right turn 
 				gpio_set_value(GPIOPIN50, LOW);
 				gpio_set_value(GPIOPIN58, LOW);
-				gpio_set_value(GPIOPIN55, LOW);
-				gpio_set_value(GPIOPIN52, HIGH);
+				gpio_set_value(GPIOPIN55, HIGH);
+				gpio_set_value(GPIOPIN52, LOW);
 			}
 			else
 			{
@@ -296,8 +296,8 @@ void *MotorThread(void *)
 				{
 					gpio_set_value(GPIOPIN50, HIGH);
 					gpio_set_value(GPIOPIN58, LOW);
-					gpio_set_value(GPIOPIN55, LOW);
-					gpio_set_value(GPIOPIN52, HIGH);
+					gpio_set_value(GPIOPIN55, HIGH);
+					gpio_set_value(GPIOPIN52, LOW);
 				}
 				else
 				{
@@ -336,7 +336,7 @@ void *MotorThread(void *)
 		}*/
 		pthread_mutex_unlock(&vector_mutex);
 		pthread_mutex_unlock(&ultrasonic_mutex);
-		usleep(20000);
+		usleep(40000);
 	}
         
 }
